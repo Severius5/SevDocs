@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using SevDocs.Client.Extensions;
+using SevDocs.Client.Providers;
 
 namespace SevDocs.Client;
 
@@ -9,8 +11,13 @@ class Program
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-        builder.Services.AddSharedServices();
         builder.Services.AddFluentValidators();
+        builder.Services.AddMudServices();
+        builder.Services.AddScoped<ApiClient>();
+        builder.Services.AddHttpClient<ApiClient>(httpClient =>
+        {
+            httpClient.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+        });
 
         builder.Services.AddAuthorizationCore();
         builder.Services.AddCascadingAuthenticationState();

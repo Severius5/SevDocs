@@ -19,7 +19,6 @@
     <Routes @rendermode="PageRenderMode" />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
-    <script src="@Assets["Components/Account/Shared/PasskeySubmit.razor.js"]" type="module"></script>
 </body>
 
 </html>
@@ -29,7 +28,7 @@
     private HttpContext HttpContext { get; set; } = default!;
 
     private IComponentRenderMode PageRenderMode => HttpContext.AcceptsInteractiveRouting()
-        // ? new InteractiveWebAssemblyRenderMode(false)
-        ? InteractiveWebAssembly
+        ? new InteractiveWebAssemblyRenderMode(false)
+        // ? InteractiveWebAssembly
         : null;
 }
