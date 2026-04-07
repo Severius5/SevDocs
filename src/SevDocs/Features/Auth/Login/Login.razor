@@ -1,0 +1,102 @@
+﻿@using Blazilla
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Identity
+@using MudBlazor
+@using MudBlazor.StaticInput
+@using SevDocs.Shared.Auth
+@using SevDocs.Client.Layout
+
+@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
+@inject NavigationManager navigation
+@layout EmptyLayout
+@attribute [ExcludeFromInteractiveRouting]
+@page "/account/login"
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="pt-5">
+    <MudText Align="Align.Center" Typo="Typo.h3">Log in</MudText>
+
+    <MudPaper Elevation="2" Class="pa-5 rounded-xl mt-5">
+        <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
+            <FluentValidator Validator="new LoginRequestValidator()" />
+
+            @if (!string.IsNullOrEmpty(errorMsg))
+            {
+                <MudAlert Variant="Variant.Outlined" Severity="Severity.Error">@errorMsg</MudAlert>
+            }
+
+            <MudStack Spacing="3">
+                <MudStaticTextField @bind-Value="Input.Email"
+                                    For="@(() => Input.Email)"
+                                    Label="Email"
+                                    UserAttributes="@(new() { { "autocomplete", "email" }, { "aria-required", "true" } })" />
+
+                <MudStaticTextField @bind-Value="Input.Password"
+                                    For="@(() => Input.Password)"
+                                    Label="Password"
+                                    InputType="InputType.Password"
+                                    UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
+
+                <MudStaticCheckBox @bind-Value="Input.RememberMe" For="@(() => Input.RememberMe)">Remember me</MudStaticCheckBox>
+
+                <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth FormAction="FormAction.Submit">Log in</MudStaticButton>
+            </MudStack>
+        </EditForm>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private EditContext editContext;
+    private string errorMsg;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; }
+
+    [SupplyParameterFromForm]
+    private LoginModel Input { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string ReturnUrl { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Input ??= new LoginModel();
+        editContext = new EditContext(Input);
+    }
+
+    private async Task LoginUser()
+    {
+        if (!editContext.Validate())
+            return;
+
+        errorMsg = null;
+
+        var user = await userManager.FindByEmailAsync(Input.Email);
+        if (user != null)
+        {
+            var result = await signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, true);
+            if (result.Succeeded)
+            {
+                RedirectToLocal(ReturnUrl);
+                return;
+            }
+
+            if (result.IsLockedOut)
+            {
+                errorMsg = "Locked out";
+                return;
+            }
+        }
+
+        errorMsg = "Invalid credentials";
+    }
+
+    private void RedirectToLocal(string url)
+    {
+        url ??= string.Empty;
+        if (!Uri.IsWellFormedUriString(url, UriKind.Relative))
+            url = navigation.ToBaseRelativePath(url);
+
+        navigation.NavigateTo(url);
+    }
+}

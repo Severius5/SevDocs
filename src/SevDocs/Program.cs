@@ -1,7 +1,6 @@
-global using SevDocs.Stores.Entities;
 global using FastEndpoints;
-
-using SevDocs.Client.Extensions;
+global using SevDocs.Stores.Entities;
+using MudBlazor.Services;
 using SevDocs.Components;
 using SevDocs.Extensions;
 using SevDocs.Shared;
@@ -17,8 +16,6 @@ public class Program
 
         builder.AddServiceDefaults();
 
-        builder.Services.AddSharedServices();
-
         builder.AddNpgsqlDbContext<AppDbContext>("postgresdb");
 
         builder.Services.AddRazorComponents()
@@ -29,6 +26,7 @@ public class Program
 
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+        builder.Services.AddMudServices();
         builder.Services.AddFastEndpoints(opts =>
         {
             opts.IncludeAbstractValidators = true;
@@ -64,6 +62,7 @@ public class Program
         app.UseFastEndpoints(opt =>
         {
             opt.Endpoints.RoutePrefix = "api";
+            opt.Errors.UseProblemDetails();
         });
 
         app.MapStaticAssets();

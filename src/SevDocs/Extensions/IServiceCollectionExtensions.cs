@@ -9,13 +9,13 @@ namespace SevDocs.Extensions
         {
             services.AddCascadingAuthenticationState();
 
+            services.AddAuthorization();
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
                 .AddIdentityCookies();
-            services.AddAuthorization();
 
             services.AddIdentityCore<AppUser>(options =>
             {
