@@ -3,9 +3,9 @@ using SevDocs.Shared.Auth;
 
 namespace SevDocs.Features.Auth.Login
 {
-    public class LoginRequestValidator : AbstractValidator<LoginModel>
+    public class LoginModelValidator : AbstractValidator<LoginModel>
     {
-        public LoginRequestValidator()
+        public LoginModelValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty()

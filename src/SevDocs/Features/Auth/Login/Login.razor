@@ -18,7 +18,7 @@
 
     <MudPaper Elevation="2" Class="pa-5 rounded-xl mt-5">
         <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
-            <FluentValidator Validator="new LoginRequestValidator()" />
+            <FluentValidator Validator="new LoginModelValidator()" />
 
             @if (!string.IsNullOrEmpty(errorMsg))
             {
