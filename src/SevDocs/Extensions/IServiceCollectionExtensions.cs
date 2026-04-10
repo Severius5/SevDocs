@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SevDocs.Services.Email;
 using SevDocs.Stores;
 
 namespace SevDocs.Extensions
@@ -25,6 +26,16 @@ namespace SevDocs.Extensions
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
+
+            return services;
+        }
+
+        internal static IServiceCollection AddEmailServices(this IServiceCollection services)
+        {
+            services.AddTransient<IEmailSender, SmtpEmailSender>();
+
+            services.AddOptions<SmtpEmailOptions>()
+                .BindConfiguration("Smtp");
 
             return services;
         }

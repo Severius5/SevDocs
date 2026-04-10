@@ -33,6 +33,7 @@ public class Program
             opts.DisableAutoDiscovery = true;
             opts.Assemblies = [typeof(Program).Assembly, typeof(SharedMarker).Assembly];
         });
+        builder.Services.AddEmailServices();
 
         //builder.Services.AddScoped<IdentityRedirectManager>();
         //builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
