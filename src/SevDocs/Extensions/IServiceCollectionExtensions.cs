@@ -35,7 +35,16 @@ namespace SevDocs.Extensions
             services.AddTransient<IEmailSender, SmtpEmailSender>();
 
             services.AddOptions<SmtpEmailOptions>()
-                .BindConfiguration("Smtp");
+                .BindConfiguration("Smtp")
+                .Configure<IConfiguration>((opt, cfg) =>
+                {
+                    if (cfg.GetConnectionString("mailpit") != null)
+                    {
+                        opt.UseSsl = false;
+                        opt.Host = cfg.GetValue<string>("MAILPIT_HOST");
+                        opt.Port = cfg.GetValue<int>("MAILPIT_PORT");
+                    }
+                });
 
             return services;
         }
