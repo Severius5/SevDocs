@@ -3,6 +3,9 @@
     <Project Path="aspire/SevDocs.AppHost/SevDocs.AppHost.csproj" />
     <Project Path="aspire/SevDocs.ServiceDefaults/SevDocs.ServiceDefaults.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/SevDocs.Client/SevDocs.Client.csproj" />
 	<Project Path="src/SevDocs.Shared/SevDocs.Shared.csproj" Id="e88b5af2-9685-421e-9f5b-eef7923d4d7f" />
