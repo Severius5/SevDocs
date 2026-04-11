@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
 using SevDocs.Services.Email;
 using SevDocs.Stores;
+using SevDocs.Templates;
 
 namespace SevDocs.Extensions
 {
@@ -28,6 +30,13 @@ namespace SevDocs.Extensions
                 .AddDefaultTokenProviders();
 
             return services;
+        }
+
+        internal static IServiceCollection AddTemplating(this IServiceCollection services)
+        {
+            return services
+                .AddScoped<HtmlRenderer>()
+                .AddTransient<ITemplateRenderer, RazorRenderer>();
         }
 
         internal static IServiceCollection AddEmailServices(this IServiceCollection services)

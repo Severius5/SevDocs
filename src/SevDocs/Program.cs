@@ -34,6 +34,7 @@ public class Program
             opts.Assemblies = [typeof(Program).Assembly, typeof(SharedMarker).Assembly];
         });
         builder.Services.AddEmailServices();
+        builder.Services.AddTemplating();
 
         //builder.Services.AddScoped<IdentityRedirectManager>();
         //builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
