@@ -1,0 +1,32 @@
+name: Check Squash Merge Format
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title for squash merge
+        run: |
+          pr_title="${{ github.event.pull_request.title }}"
+          pattern="^GH-\d+"
+          
+          echo "PR Title: '$pr_title'"
+          echo ""
+          
+          if [[ $pr_title =~ $pattern ]]; then
+            echo "✅ Valid! This PR can be squashed and merged."
+            exit 0
+          else
+            echo "❌ Invalid PR title for squash merge"
+            echo ""
+            echo "Since this PR uses squash merge, the PR title becomes the commit message."
+            echo "Update the title to start with an issue number:"
+            echo ""
+            echo "Examples:"
+            echo "  ✅ GH-123: Fix authentication bug"
+            echo "  ✅ GH-456 Implement payment integration"
+            exit 1
+          fi
