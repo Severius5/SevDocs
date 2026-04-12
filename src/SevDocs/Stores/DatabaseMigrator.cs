@@ -15,6 +15,9 @@ namespace SevDocs.Stores
             {
                 await dbContext.Database.MigrateAsync();
             });
+
+            var jobsContext = scope.ServiceProvider.GetRequiredService<JobsDbContext>();
+            await jobsContext.Database.EnsureCreatedAsync();
         }
 
         public static async Task SeedDevDatabaseAsync(this WebApplication app)

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
+using SevDocs.Features.SendEmail;
 using SevDocs.Services.Email;
 using SevDocs.Stores;
+using SevDocs.Stores.Jobs;
 using SevDocs.Templates;
 
 namespace SevDocs.Extensions
@@ -56,6 +58,19 @@ namespace SevDocs.Extensions
                 });
 
             return services;
+        }
+
+        internal static IServiceCollection AddJobs(this IServiceCollection services)
+        {
+            services.Configure<JobsOptions>(opt =>
+            {
+                opt.Retry.Delay = TimeSpan.FromMinutes(1);
+                opt.Retry.Retries = 3;
+
+                opt.ConfigureRetries<SendEmailJob>(10, TimeSpan.FromSeconds(5));
+            });
+
+            return services.AddJobQueues<JobRecord, JobsStorage>();
         }
     }
 }

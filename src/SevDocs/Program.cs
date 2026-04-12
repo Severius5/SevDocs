@@ -1,5 +1,6 @@
 global using FastEndpoints;
 global using SevDocs.Stores.Entities;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using SevDocs.Components;
 using SevDocs.Extensions;
@@ -17,6 +18,8 @@ public class Program
         builder.AddServiceDefaults();
 
         builder.AddNpgsqlDbContext<AppDbContext>("postgresdb");
+        builder.Services.AddPooledDbContextFactory<JobsDbContext>(o =>
+            o.UseSqlite(builder.Configuration.GetConnectionString("jobs")));
 
         builder.Services.AddRazorComponents()
             .AddInteractiveWebAssemblyComponents()
@@ -33,6 +36,7 @@ public class Program
             opts.DisableAutoDiscovery = true;
             opts.Assemblies = [typeof(Program).Assembly, typeof(SharedMarker).Assembly];
         });
+        builder.Services.AddJobs();
         builder.Services.AddEmailServices();
         builder.Services.AddTemplating();
 
@@ -66,6 +70,8 @@ public class Program
             opt.Endpoints.RoutePrefix = "api";
             opt.Errors.UseProblemDetails();
         });
+
+        app.UseJobQueues();
 
         app.MapStaticAssets();
         app.MapRazorComponents<App>()

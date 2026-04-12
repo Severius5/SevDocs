@@ -2,6 +2,6 @@
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(Mailbox receiver, string subject, string htmlBody);
+        Task SendEmailAsync(Mailbox receiver, string subject, string htmlBody, CancellationToken ct = default);
     }
 }
