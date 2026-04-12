@@ -9,7 +9,7 @@ namespace SevDocs.Services.Email
     {
         private readonly SmtpEmailOptions _options = options.Value;
 
-        public async Task SendEmailAsync(Mailbox receiver, string subject, string htmlBody)
+        public async Task SendEmailAsync(Mailbox receiver, string subject, string htmlBody, CancellationToken ct = default)
         {
             using var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_options.SenderName, _options.SenderEmail));
@@ -21,11 +21,11 @@ namespace SevDocs.Services.Email
             };
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl);
+            await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, ct);
             if (_options.UseSsl)
-                await client.AuthenticateAsync(_options.Username, _options.Password);
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
+                await client.AuthenticateAsync(_options.Username, _options.Password, ct);
+            await client.SendAsync(message, ct);
+            await client.DisconnectAsync(true, ct);
         }
     }
 }
