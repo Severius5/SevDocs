@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using SevDocs.Features.SendEmail;
 using SevDocs.Services.Email;
 using SevDocs.Stores;
+using SevDocs.Stores.Configs;
 using SevDocs.Stores.Jobs;
 using SevDocs.Templates;
 
@@ -27,11 +30,20 @@ namespace SevDocs.Extensions
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
             })
+                .AddRoles<AppRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
             return services;
+        }
+
+        public static void AddDatabase(this WebApplicationBuilder builder)
+        {
+            builder.AddNpgsqlDbContext<AppDbContext>("postgresdb");
+            builder.AddSqliteDbContext<JobsDbContext>("sqlite");
+            builder.Services.AddPooledDbContextFactory<JobsDbContext>(opt => { });
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
         internal static IServiceCollection AddTemplating(this IServiceCollection services)

@@ -1,6 +1,5 @@
 global using FastEndpoints;
 global using SevDocs.Stores.Entities;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using SevDocs.Components;
 using SevDocs.Extensions;
@@ -17,18 +16,12 @@ public class Program
 
         builder.AddServiceDefaults();
 
-        builder.AddNpgsqlDbContext<AppDbContext>("postgresdb");
-        builder.Services.AddPooledDbContextFactory<JobsDbContext>(o =>
-            o.UseSqlite(builder.Configuration.GetConnectionString("jobs")));
-
         builder.Services.AddRazorComponents()
             .AddInteractiveWebAssemblyComponents()
             .AddAuthenticationStateSerialization();
 
+        builder.AddDatabase();
         builder.Services.AddAuth();
-
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
         builder.Services.AddMudServices();
         builder.Services.AddFastEndpoints(opts =>
         {
