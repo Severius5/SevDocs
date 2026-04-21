@@ -4,7 +4,7 @@ namespace SevDocs.Stores.Configs
 {
     internal class UlidValueConverter : ValueConverter<Ulid, string>
     {
-        private static readonly ConverterMappingHints DefaultHints = new ConverterMappingHints(26);
+        private static readonly ConverterMappingHints DefaultHints = new ConverterMappingHints(size: 26, valueGeneratorFactory: (_, _) => new UlidValueGenerator());
 
         public UlidValueConverter()
             : this(null)

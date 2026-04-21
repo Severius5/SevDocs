@@ -7,6 +7,6 @@ namespace SevDocs.Features.SendEmail;
 public class SendEmailJob : ICommand
 {
     [JsonConverter(typeof(TemplateJobConverter))]
-    public ITemplate Template { get; init; }
-    public Mailbox Receiver { get; init; }
+    public required ITemplate Template { get; init; }
+    public required Mailbox Receiver { get; init; }
 }
